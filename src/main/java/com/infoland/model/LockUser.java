@@ -3,9 +3,9 @@ package com.infoland.model;
 public class LockUser {
     private Integer id;
 
-    private Integer cardId;
+    private String cardId;
 
-    private Integer password;
+    private String password;
 
     public Integer getId() {
         return id;
@@ -15,19 +15,19 @@ public class LockUser {
         this.id = id;
     }
 
-    public Integer getCardId() {
+    public String getCardId() {
         return cardId;
     }
 
-    public void setCardId(Integer cardId) {
-        this.cardId = cardId;
+    public void setCardId(String cardId) {
+        this.cardId = cardId == null ? null : cardId.trim();
     }
 
-    public Integer getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(Integer password) {
-        this.password = password;
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
     }
 }

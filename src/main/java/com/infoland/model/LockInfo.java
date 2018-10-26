@@ -1,13 +1,11 @@
 package com.infoland.model;
 
-import java.util.Date;
-
 public class LockInfo {
     private Integer id;
 
-    private Integer carid;
+    private String carid;
 
-    private Date time;
+    private String time;
 
     public Integer getId() {
         return id;
@@ -17,19 +15,19 @@ public class LockInfo {
         this.id = id;
     }
 
-    public Integer getCarid() {
+    public String getCarid() {
         return carid;
     }
 
-    public void setCarid(Integer carid) {
-        this.carid = carid;
+    public void setCarid(String carid) {
+        this.carid = carid == null ? null : carid.trim();
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(String time) {
+        this.time = time == null ? null : time.trim();
     }
 }

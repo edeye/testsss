@@ -3,8 +3,11 @@ package com.infoland.Server.Impl;
 import com.infoland.Server.AccessServer;
 import com.infoland.Util.WatchingShortHandler;
 import com.infoland.Util.WgUdpCommShort;
+import com.infoland.dao.LockInfoMapper;
+import com.infoland.model.LockInfo;
 import org.apache.mina.transport.socket.DatagramSessionConfig;
 import org.apache.mina.transport.socket.nio.NioDatagramAcceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -12,6 +15,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -43,6 +47,9 @@ public class AccessServerImpl implements AccessServer {
     private int timeb = 0;//两次网络连接的时间差
     private byte[] recvBuff;
     private WgUdpCommShort pkt = new WgUdpCommShort();
+
+    @Autowired
+    private LockInfoMapper lockInfoMapper;
 
     /**
      * 建立连接
@@ -166,12 +173,19 @@ public class AccessServerImpl implements AccessServer {
                         log(String.format("当前密码....." + keyAll));
 
                         if (keylen == 6 || key48 == 27) {
+
+
                             if (keyNumAll.equals(String.valueOf(password))) {
                                 openDoor();
                                 log("密码正确，开门");
                             } else {
                                 log("密码错误，不开");
                             }
+                            LockInfo lockInfo = new LockInfo();
+                            lockInfo.setCarid(String.valueOf(user));
+                            lockInfo.setTime(controllerTime);
+                            lockInfoMapper.insert(lockInfo);
+                            log("存进数据库");
                             keylen = 0;
                             keyNum = "";
                             keyNumAll = "";

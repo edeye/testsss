@@ -3,8 +3,8 @@
 <mapper namespace="com.infoland.dao.LockUserMapper" >
   <resultMap id="BaseResultMap" type="com.infoland.model.LockUser" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="card_id" property="cardId" jdbcType="INTEGER" />
-    <result column="password" property="password" jdbcType="INTEGER" />
+    <result column="card_id" property="cardId" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, card_id, password
@@ -22,7 +22,7 @@
   <insert id="insert" parameterType="com.infoland.model.LockUser" >
     insert into lockuser (id, card_id, password
       )
-    values (#{id,jdbcType=INTEGER}, #{cardId,jdbcType=INTEGER}, #{password,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.infoland.model.LockUser" >
@@ -43,10 +43,10 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="cardId != null" >
-        #{cardId,jdbcType=INTEGER},
+        #{cardId,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
-        #{password,jdbcType=INTEGER},
+        #{password,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -54,18 +54,18 @@
     update lockuser
     <set >
       <if test="cardId != null" >
-        card_id = #{cardId,jdbcType=INTEGER},
+        card_id = #{cardId,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
-        password = #{password,jdbcType=INTEGER},
+        password = #{password,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.infoland.model.LockUser" >
     update lockuser
-    set card_id = #{cardId,jdbcType=INTEGER},
-      password = #{password,jdbcType=INTEGER}
+    set card_id = #{cardId,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

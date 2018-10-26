@@ -1,8 +1,11 @@
 package com.infoland.dao;
 
 import com.infoland.model.LockInfo;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface LockInfoMapper {
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(LockInfo record);
