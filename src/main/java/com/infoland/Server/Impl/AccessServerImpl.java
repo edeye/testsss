@@ -4,7 +4,9 @@ import com.infoland.Server.AccessServer;
 import com.infoland.Util.WatchingShortHandler;
 import com.infoland.Util.WgUdpCommShort;
 import com.infoland.dao.LockInfoMapper;
+import com.infoland.dao.LockUserMapper;
 import com.infoland.model.LockInfo;
+import com.infoland.model.LockUser;
 import org.apache.mina.transport.socket.DatagramSessionConfig;
 import org.apache.mina.transport.socket.nio.NioDatagramAcceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
+
 import java.util.Queue;
 
 
@@ -47,9 +49,12 @@ public class AccessServerImpl implements AccessServer {
     private int timeb = 0;//两次网络连接的时间差
     private byte[] recvBuff;
     private WgUdpCommShort pkt = new WgUdpCommShort();
-
+    private LockUser lockUser = new LockUser();
+    private LockInfo lockInfo = new LockInfo();
     @Autowired
     private LockInfoMapper lockInfoMapper;
+    @Autowired
+    private LockUserMapper lockUserMapper;
 
     /**
      * 建立连接
@@ -116,8 +121,8 @@ public class AccessServerImpl implements AccessServer {
         }
         log("进入接收服务器监控状态....[如果在win7下使用 一定要注意防火墙设置]");
         //生成6位随机码
-        int password = (int) ((Math.random() * 9 + 1) * 100000);
-        log("已生成6位随机密码" + password);
+//        int password = (int) ((Math.random() * 9 + 1) * 100000);
+//        log("已生成6位随机密码" + password);
 
         int cardkey = 0;//是否需要刷卡
         while (true) {
@@ -150,6 +155,7 @@ public class AccessServerImpl implements AccessServer {
                         log("距离上次输出超时，keyNum，keyNumAll,kenlen全部清空" + keyNum + "," + keyNumAll + "," + keylen);
                         keyNum = "";
                         keyNumAll = "";
+                        lockUser = null;
                         keylen = 0;
                         cardkey = 0;
                     } else {
@@ -173,19 +179,29 @@ public class AccessServerImpl implements AccessServer {
                         log(String.format("当前密码....." + keyAll));
 
                         if (keylen == 6 || key48 == 27) {
+                            String dbool = "";
 
+                            lockUser.setCardId(String.valueOf(user));
+                            lockUser.setPassword(keyAll);
+                            LockUser userkey = lockUserMapper.selectByCardIdAndPassword(lockUser);
 
-                            if (keyNumAll.equals(String.valueOf(password))) {
+                            if (userkey != null) {
+                                dbool = "1";
                                 openDoor();
                                 log("密码正确，开门");
                             } else {
                                 log("密码错误，不开");
+                                dbool = "0";
                             }
-                            LockInfo lockInfo = new LockInfo();
-                            lockInfo.setCarid(String.valueOf(user));
+
+                            lockInfo.setCardId(String.valueOf(user));
+                            lockInfo.setPassword(keyAll);
+                            lockInfo.setDbool(dbool);
                             lockInfo.setTime(controllerTime);
                             lockInfoMapper.insert(lockInfo);
                             log("存进数据库");
+
+                            lockUser = null;
                             keylen = 0;
                             keyNum = "";
                             keyNumAll = "";

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LockInfoMapper {
-
     int deleteByPrimaryKey(Integer id);
 
     int insert(LockInfo record);

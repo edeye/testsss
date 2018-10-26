@@ -1,7 +1,9 @@
 package com.infoland.dao;
 
 import com.infoland.model.LockUser;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface LockUserMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface LockUserMapper {
     int updateByPrimaryKeySelective(LockUser record);
 
     int updateByPrimaryKey(LockUser record);
+
+    LockUser selectByCardIdAndPassword(LockUser lockUser);
 }

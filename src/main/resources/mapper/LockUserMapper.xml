@@ -1,68 +1,76 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.infoland.dao.LockUserMapper" >
-  <resultMap id="BaseResultMap" type="com.infoland.model.LockUser" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="card_id" property="cardId" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.infoland.dao.LockUserMapper">
+    <resultMap id="BaseResultMap" type="com.infoland.model.LockUser">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="card_id" property="cardId" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, card_id, password
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from lockuser
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from lockuser
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByCardIdAndPassword" resultMap="BaseResultMap" parameterType="com.infoland.model.LockUser">
+        select
+        <include refid="Base_Column_List"/>
+        from lockuser
+        where card_id = #{cardId,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from lockuser
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.infoland.model.LockUser" >
+    <insert id="insert" parameterType="com.infoland.model.LockUser">
     insert into lockuser (id, card_id, password
       )
     values (#{id,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.infoland.model.LockUser" >
-    insert into lockuser
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="cardId != null" >
-        card_id,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="cardId != null" >
-        #{cardId,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.infoland.model.LockUser" >
-    update lockuser
-    <set >
-      <if test="cardId != null" >
-        card_id = #{cardId,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.infoland.model.LockUser" >
+    <insert id="insertSelective" parameterType="com.infoland.model.LockUser">
+        insert into lockuser
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cardId != null">
+                card_id,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="cardId != null">
+                #{cardId,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.infoland.model.LockUser">
+        update lockuser
+        <set>
+            <if test="cardId != null">
+                card_id = #{cardId,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.infoland.model.LockUser">
     update lockuser
     set card_id = #{cardId,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR}
