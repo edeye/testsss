@@ -49,12 +49,13 @@ public class AccessServerImpl implements AccessServer {
     private int timeb = 0;//两次网络连接的时间差
     private byte[] recvBuff;
     private WgUdpCommShort pkt = new WgUdpCommShort();
-    private LockUser lockUser = new LockUser();
-    private LockInfo lockInfo = new LockInfo();
+    private LockUser lockUser;
+    private LockInfo lockInfo;
     @Autowired
     private LockInfoMapper lockInfoMapper;
     @Autowired
     private LockUserMapper lockUserMapper;
+
 
     /**
      * 建立连接
@@ -150,8 +151,8 @@ public class AccessServerImpl implements AccessServer {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    //四秒内
-                    if (keylen != 0 && timeb > 4) {
+                    //5秒内
+                    if (keylen != 0 && timeb > 5) {
                         log("距离上次输出超时，keyNum，keyNumAll,kenlen全部清空" + keyNum + "," + keyNumAll + "," + keylen);
                         keyNum = "";
                         keyNumAll = "";
@@ -180,10 +181,11 @@ public class AccessServerImpl implements AccessServer {
 
                         if (keylen == 6 || key48 == 27) {
                             String dbool = "";
-
+                            lockUser = new LockUser();
                             lockUser.setCardId(String.valueOf(user));
                             lockUser.setPassword(keyAll);
                             LockUser userkey = lockUserMapper.selectByCardIdAndPassword(lockUser);
+
 
                             if (userkey != null) {
                                 dbool = "1";
@@ -194,6 +196,8 @@ public class AccessServerImpl implements AccessServer {
                                 dbool = "0";
                             }
 
+
+                            lockInfo = new LockInfo();
                             lockInfo.setCardId(String.valueOf(user));
                             lockInfo.setPassword(keyAll);
                             lockInfo.setDbool(dbool);
@@ -201,7 +205,6 @@ public class AccessServerImpl implements AccessServer {
                             lockInfoMapper.insert(lockInfo);
                             log("存进数据库");
 
-                            lockUser = null;
                             keylen = 0;
                             keyNum = "";
                             keyNumAll = "";
@@ -224,9 +227,78 @@ public class AccessServerImpl implements AccessServer {
 //	  return 0;
     }
 
+    //=======================================工具================================//
 
     /**
-     * 设置接收服务器(本机)与测试
+     * 键盘数字转换
+     */
+    public String getKey(int key) {
+
+        if (key == 16) {
+            keyNum = "0";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 17) {
+            keyNum = "1";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 18) {
+            keyNum = "2";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 19) {
+            keyNum = "3";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 20) {
+            keyNum = "4";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 21) {
+            keyNum = "5";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 22) {
+            keyNum = "6";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 23) {
+            keyNum = "7";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 24) {
+            keyNum = "8";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        if (key == 25) {
+            keyNum = "9";
+            keyNumAll = keyNumAll + keyNum;
+            keylen++;
+        }
+        return keyNumAll;
+    }
+
+    /**
+     * 日志信息
+     */
+    public static void log(String info) {
+        System.out.println(info);
+    }
+
+
+    //================================调试===================================//
+
+    /**
+     * 设置接收服务器(本机)IP,端口和主动上传按键信息
      */
     @Override
     public void setWatchingServer() {
@@ -250,7 +322,7 @@ public class AccessServerImpl implements AccessServer {
 
         // 每隔5秒发送一次: 05 (定时上传信息的周期为5秒 [正常运行时每隔5秒发送一次 有刷卡时立即发送])
         pkt.data[6] = 0;
-        //设置主动上传按键信息，这个功能和设置ip,端口是绑定的
+        //设置主动上传按键信息
         pkt.data[7] = 1;
 
         recvBuff = pkt.run();
@@ -274,9 +346,6 @@ public class AccessServerImpl implements AccessServer {
     }
 
 
-    // =======================以下功能可能不会再用到了========================//
-
-
     /**
      * 设置超级密码，可以直接开门
      */
@@ -285,11 +354,10 @@ public class AccessServerImpl implements AccessServer {
         pkt.Reset();
         pkt.functionID = (byte) 0x8C;
         pkt.iDevSn = controllerSN;
-        long password = 0x00027009;
         pkt.data[0] = 0x01;
-        pkt.data[4] = 0x09;
-        pkt.data[5] = 0x70;
-        pkt.data[6] = 0x02;
+        pkt.data[4] = 0x00;
+        pkt.data[5] = 0x00;
+        pkt.data[6] = 0x00;
         pkt.data[7] = 0x00;
         recvBuff = pkt.run();
         if (recvBuff != null) {
@@ -302,7 +370,7 @@ public class AccessServerImpl implements AccessServer {
     }
 
     /**
-     * 启用数字键盘，初始状态下未开启
+     * 启用数字键盘
      */
     @Override
     public void openNumKeyboard() {
@@ -341,7 +409,8 @@ public class AccessServerImpl implements AccessServer {
         }
     }
 
-    //================================以下功能也可能不会再用到了======================//
+
+    //===============================↓↓↓没用的东西↓↓↓==============================//
 
     /**
      * 添加或修改一个权限，需要NFC卡号
@@ -442,67 +511,5 @@ public class AccessServerImpl implements AccessServer {
         }
     }
 
-
-    public String getKey(int key) {
-
-        if (key == 16) {
-            keyNum = "0";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 17) {
-            keyNum = "1";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 18) {
-            keyNum = "2";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 19) {
-            keyNum = "3";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 20) {
-            keyNum = "4";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 21) {
-            keyNum = "5";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 22) {
-            keyNum = "6";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 23) {
-            keyNum = "7";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 24) {
-            keyNum = "8";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        if (key == 25) {
-            keyNum = "9";
-            keyNumAll = keyNumAll + keyNum;
-            keylen++;
-        }
-        return keyNumAll;
-    }
-
-    /**
-     * 日志信息
-     */
-    public static void log(String info) {
-        System.out.println(info);
-    }
 
 }

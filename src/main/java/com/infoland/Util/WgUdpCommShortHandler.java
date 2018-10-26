@@ -20,14 +20,12 @@ public class WgUdpCommShortHandler implements IoHandler {
         this.queue = queue;
     }
 
-    public void exceptionCaught(IoSession session, Throwable e)
-            throws Exception {
+    public void exceptionCaught(IoSession session, Throwable e) {
         e.printStackTrace();
         session.close(true);
     }
 
-    public void messageReceived(IoSession session, Object message)
-            throws Exception {
+    public void messageReceived(IoSession session, Object message) {
         IoBuffer io = (IoBuffer) message;
         if (io.hasRemaining()) {
             byte[] validBytes = new byte[io.remaining()];
@@ -45,24 +43,23 @@ public class WgUdpCommShortHandler implements IoHandler {
         }
     }
 
-    public void messageSent(IoSession session, Object message) throws Exception {
+    public void messageSent(IoSession session, Object message) {
 
     }
 
-    public void sessionClosed(IoSession session) throws Exception {
+    public void sessionClosed(IoSession session) {
 
     }
 
-    public void sessionCreated(IoSession session) throws Exception {
+    public void sessionCreated(IoSession session) {
 
     }
 
-    public void sessionIdle(IoSession session, IdleStatus idle)
-            throws Exception {
+    public void sessionIdle(IoSession session, IdleStatus idle) {
 
     }
 
-    public void sessionOpened(IoSession session) throws Exception {
+    public void sessionOpened(IoSession session) {
 
     }
 

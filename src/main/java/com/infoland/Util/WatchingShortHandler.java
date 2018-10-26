@@ -27,7 +27,7 @@ public class WatchingShortHandler extends IoHandlerAdapter {
      * 异常来关闭session
      */
     @Override
-    public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+    public void exceptionCaught(IoSession session, Throwable cause) {
         cause.printStackTrace();
         session.close(true);
     }
@@ -36,7 +36,7 @@ public class WatchingShortHandler extends IoHandlerAdapter {
      * 服务器端收到一个消息
      */
     @Override
-    public void messageReceived(IoSession session, Object message) throws Exception {
+    public void messageReceived(IoSession session, Object message) {
 
         IoBuffer io = (IoBuffer) message;
         if (io.hasRemaining()) {
@@ -54,22 +54,22 @@ public class WatchingShortHandler extends IoHandlerAdapter {
     }
 
     @Override
-    public void sessionClosed(IoSession session) throws Exception {
+    public void sessionClosed(IoSession session) {
 //            System.out.println("服务器端关闭session...");
     }
 
     @Override
-    public void sessionCreated(IoSession session) throws Exception {
+    public void sessionCreated(IoSession session) {
 //            System.out.println("服务器端成功创建一个session...");
     }
 
     @Override
-    public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
+    public void sessionIdle(IoSession session, IdleStatus status) {
         // System.out.println("Session idle...");
     }
 
     @Override
-    public void sessionOpened(IoSession session) throws Exception {
+    public void sessionOpened(IoSession session) {
 //            System.out.println("服务器端成功开启一个session...");
     }
 }

@@ -45,6 +45,8 @@ public class AccessController {
         accessServer.setWatchingServerRuning();
     }
 
+    //========================================调试用===============================//
+
     /**
      * 设置接收服务器
      */
@@ -53,7 +55,6 @@ public class AccessController {
         accessServer.setWatchingServer();
     }
 
-    //========================================调试用===============================//
 
     /**
      * 设置超级密码
@@ -78,6 +79,8 @@ public class AccessController {
     private void openNumAndCardMode() {
         accessServer.openNumAndCardMode();
     }
+
+    //=================================没用=======================//
 
     /**
      * 添加一张卡
