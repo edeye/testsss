@@ -111,7 +111,8 @@ public class AccessServerImpl implements AccessServer {
         //生成6位随机码
         int password = (int) ((Math.random() * 9 + 1) * 100000);
         log("已生成6位随机密码" + password);
-        int kkk = 0;//是否需要刷卡
+
+        int cardkey = 0;//是否需要刷卡
         while (true) {
             if (!queue.isEmpty()) {
                 byte[] recvBuff;
@@ -143,14 +144,14 @@ public class AccessServerImpl implements AccessServer {
                         keyNum = "";
                         keyNumAll = "";
                         keylen = 0;
-                        kkk = 0;
+                        cardkey = 0;
                     } else {
                         log("没有数据或者未超时" + keyNum + "," + keyNumAll + "," + keylen);
                     }
 
                     if (key12 == 1) {
                         if (key48 == 0) {
-                            kkk = 1;
+                            cardkey = 1;
                             log("刷过卡了，可以输入");
                         }
                     } else {
@@ -158,7 +159,7 @@ public class AccessServerImpl implements AccessServer {
                     }
 
 
-                    if (kkk == 1) {
+                    if (cardkey == 1) {
                         String keyAll = getKey(key48);
                         log(String.format("当前账号......" + user));
                         log(String.format("当前键盘输入..." + key48));
@@ -174,7 +175,7 @@ public class AccessServerImpl implements AccessServer {
                             keylen = 0;
                             keyNum = "";
                             keyNumAll = "";
-                            kkk = 0;
+                            cardkey = 0;
                         }
 
                     }
