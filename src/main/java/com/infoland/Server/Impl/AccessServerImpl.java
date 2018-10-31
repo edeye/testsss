@@ -467,7 +467,7 @@ public class AccessServerImpl implements AccessServer {
         if (recvBuff != null) {
             if (WgUdpCommShort.getIntByByte(recvBuff[8]) == 1) {
                 // 这时 刷卡号为= 0x0037D70D = 3659533 (十进制)的卡, 1号门继电器不会动作.
-                log("1.12 权限删除(单个删除)	 成功...");
+                log("权限删除(单个删除)	 成功...");
 
             }
         }
