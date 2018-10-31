@@ -17,5 +17,7 @@ public interface LockUserMapper {
 
     int updateByPrimaryKey(LockUser record);
 
+    int updateDbool(LockUser lockUser);
+
     LockUser selectByCardIdAndPassword(LockUser lockUser);
 }
