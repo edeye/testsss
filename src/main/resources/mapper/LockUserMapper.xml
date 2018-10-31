@@ -5,33 +5,33 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="card_id" property="cardId" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="dbool" property="dbool" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, card_id, password
+    id, card_id, password, dbool
   </sql>
+
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from lockuser
         where id = #{id,jdbcType=INTEGER}
     </select>
-
     <select id="selectByCardIdAndPassword" resultMap="BaseResultMap" parameterType="com.infoland.model.LockUser">
         select
         <include refid="Base_Column_List"/>
         from lockuser
-        where card_id = #{cardId,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+        where card_id= #{cardId,jdbcType=VARCHAR} and password= #{password,jdbcType=VARCHAR}
     </select>
-
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from lockuser
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.infoland.model.LockUser">
-    insert into lockuser (id, card_id, password
-      )
-    values (#{id,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
-      )
+    insert into lockuser (id, card_id, password, 
+      dbool)
+    values (#{id,jdbcType=INTEGER}, #{cardId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{dbool,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.infoland.model.LockUser">
         insert into lockuser
@@ -45,6 +45,9 @@
             <if test="password != null">
                 password,
             </if>
+            <if test="dbool != null">
+                dbool,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -55,6 +58,9 @@
             </if>
             <if test="password != null">
                 #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="dbool != null">
+                #{dbool,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -67,13 +73,17 @@
             <if test="password != null">
                 password = #{password,jdbcType=VARCHAR},
             </if>
+            <if test="dbool != null">
+                dbool = #{dbool,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.infoland.model.LockUser">
     update lockuser
     set card_id = #{cardId,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR}
+      password = #{password,jdbcType=VARCHAR},
+      dbool = #{dbool,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

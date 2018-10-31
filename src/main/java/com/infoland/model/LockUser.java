@@ -7,6 +7,8 @@ public class LockUser {
 
     private String password;
 
+    private String dbool;
+
     public Integer getId() {
         return id;
     }
@@ -29,5 +31,13 @@ public class LockUser {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public String getDbool() {
+        return dbool;
+    }
+
+    public void setDbool(String dbool) {
+        this.dbool = dbool == null ? null : dbool.trim();
     }
 }

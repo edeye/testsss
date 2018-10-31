@@ -186,17 +186,22 @@ public class AccessServerImpl implements AccessServer {
                             lockUser.setPassword(keyAll);
                             LockUser userkey = lockUserMapper.selectByCardIdAndPassword(lockUser);
 
-
                             if (userkey != null) {
                                 dbool = "1";
-                                openDoor();
-                                log("密码正确，开门");
+                                if (userkey.getDbool().equals("1")) {
+                                    openDoor();
+                                    log("开过门了");
+                                } else {
+                                    openDoor();
+                                    log("密码正确，开门");
+                                }
+
                             } else {
                                 log("密码错误，不开");
                                 dbool = "0";
                             }
 
-
+                            //开门记录，验证了就会存进数据库
                             lockInfo = new LockInfo();
                             lockInfo.setCardId(String.valueOf(user));
                             lockInfo.setPassword(keyAll);
