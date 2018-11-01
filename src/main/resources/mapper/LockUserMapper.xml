@@ -90,6 +90,6 @@
     update lockuser
     set
       dbool = #{dbool,jdbcType=VARCHAR}
-    where card_id = #{id,jdbcType=INTEGER} and password= #{password,jdbcType=VARCHAR}
+    where card_id = #{cardId,jdbcType=VARCHAR} and password= #{password,jdbcType=VARCHAR}
   </update>
 </mapper>

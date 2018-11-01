@@ -185,21 +185,22 @@ public class AccessServerImpl implements AccessServer {
                             lockUser.setCardId(String.valueOf(user));
                             lockUser.setPassword(keyAll);
                             LockUser userkey = lockUserMapper.selectByCardIdAndPassword(lockUser);
-                            //10/31修改未测试
+                            //10/31修改
                             if (userkey != null) {
 
                                 dbool = "1";
 
-                                if (userkey.getDbool().equals("1")) {
-                                    log("开过一次门了");
-                                } else {
+                                if (userkey.getDbool() == null || !userkey.getDbool().equals("1")) {
                                     openDoor();
                                     LockUser lockUser = new LockUser();
                                     lockUser.setCardId(String.valueOf(user));
                                     lockUser.setPassword(keyAll);
                                     lockUser.setDbool("1");
                                     lockUserMapper.updateDbool(lockUser);
-                                    log("密码正确，开门，下次不能开门了");
+                                    log("密码正确，开门---你已经失去了再次开门的权力");
+                                } else {
+                                    log("开过一次门的人,就不能再开了");
+                                    dbool = "0";
                                 }
 
                             } else {
@@ -207,7 +208,7 @@ public class AccessServerImpl implements AccessServer {
                                 dbool = "0";
                             }
 
-                            //开门记录，验证了就会存进数据库
+                            //开门记录，验证了就会存进数据库，无论是否打开了门
                             lockInfo = new LockInfo();
                             lockInfo.setCardId(String.valueOf(user));
                             lockInfo.setPassword(keyAll);
