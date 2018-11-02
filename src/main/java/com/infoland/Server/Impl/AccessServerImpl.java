@@ -160,7 +160,7 @@ public class AccessServerImpl implements AccessServer {
                         keylen = 0;
                         cardkey = 0;
                     } else {
-                        log("没有数据或者未超时" + keyNum + "," + keyNumAll + "," + keylen);
+                        log("没有数据或者未超时" + keyNum + "," + keyNumAll + "," + keylen + "需要重新刷卡");
                     }
 
                     if (key12 == 1) {
