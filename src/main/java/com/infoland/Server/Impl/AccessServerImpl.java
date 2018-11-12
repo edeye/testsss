@@ -1,6 +1,7 @@
 package com.infoland.Server.Impl;
 
 import com.infoland.Server.AccessServer;
+import com.infoland.Util.NoAndOffLighThouseService;
 import com.infoland.Util.WatchingShortHandler;
 import com.infoland.Util.WgUdpCommShort;
 import com.infoland.dao.LockInfoMapper;
@@ -56,6 +57,7 @@ public class AccessServerImpl implements AccessServer {
     @Autowired
     private LockUserMapper lockUserMapper;
 
+    private NoAndOffLighThouseService light = new NoAndOffLighThouseService();
 
     /**
      * 建立连接
@@ -202,10 +204,10 @@ public class AccessServerImpl implements AccessServer {
                                     log("开过一次门的人,就不能再开了");
                                     dbool = "0";
                                 }
-
                             } else {
                                 log("密码错误，不开");
                                 dbool = "0";
+                                light.redLighNo();
                             }
 
                             //开门记录，验证了就会存进数据库，无论是否打开了门
